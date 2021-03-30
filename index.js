@@ -9,7 +9,7 @@ const port = process.env.PORT || 5055;
 app.use(cors())
 app.use(express.json())
 
-const uri = `mongodb+srv://volunteer:volunteer123@cluster0.2zggz.mongodb.net/volunteer-net?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.2zggz.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
