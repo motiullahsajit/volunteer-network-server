@@ -23,6 +23,15 @@ client.connect(err => {
             })
     })
 
+    app.get('/event/:id', (req, res) => {
+        const id = ObjectID(req.params.id)
+        eventCollection.find({ _id: id })
+            .toArray((err, documents) => {
+                res.send(documents[0]);
+            })
+    });
+
+
     app.post('/addEvent', (req, res) => {
         const newEvent = req.body;
         eventCollection.insertOne(newEvent)
@@ -33,14 +42,27 @@ client.connect(err => {
         // console.log('addin new ', newEvent)
     })
 
+    //patch method
+    app.patch('/update/:id', (req, res) => {
+        const id = ObjectID(req.params.id)
+        eventCollection.updateOne({ _id: id },
+            {
+                $set: { name: req.body.name, price: req.body.price, quantity: req.body.quantity, description: req.body.description, imageURL: req.body.imageURL }
+            })
+            .then(result => {
+                res.send(result.modifiedCount > 0)
+            })
+    })
+
+
     app.delete('/deleteEvent/:id', (req, res) => {
         const id = ObjectID(req.params.id)
         // eventCollection.findOneAndDelete(req._id)
         console.log('delete this', id)
         eventCollection.findOneAndDelete({ _id: id })
-        .then(document=>{
-            res.send('deleted')
-        })
+            .then(document => {
+                res.send('deleted')
+            })
     })
 
 
